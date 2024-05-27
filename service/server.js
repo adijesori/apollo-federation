@@ -42,6 +42,9 @@ const server = new ApolloServer({
       resolvers,
     },
   ]),
+  context({ req }) {
+    console.log("Headers", req.headers);
+  }
 });
 
 server.listen(4001).then(({ url }) => {
