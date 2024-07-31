@@ -2,22 +2,27 @@ const { ApolloServer, gql } = require('apollo-server');
 const { buildSubgraphSchema } = require('@apollo/subgraph');
 
 const typeDefs = gql`
-  extend schema
-  @link(
-      url: "https://specs.apollo.dev/federation/v2.5"
-      import: ["@key", "@requires", "@external"]
-  )
-    
-  type User @key(fields: "id") {
-    id: ID!
-    firstName: String!
-    lastName: String!
-    address: String
-  }
+    extend schema
+    @link(
+        url: "https://specs.apollo.dev/federation/v2.5"
+        import: ["@key", "@requires", "@external"]
+    )
 
-  type Query {
-    user: User
-  }
+    type UserOrder @key(fields: "id") {
+        id: ID!
+    }
+
+    type User @key(fields: "id") {
+        id: ID!
+        firstName: String!
+        lastName: String!
+        address: String
+        userOrders: [UserOrder!]
+    }
+
+    type Query {
+        user: User
+    }
 `;
 
 const lookupUser = () => ({
@@ -25,12 +30,17 @@ const lookupUser = () => ({
   firstName: 'Jake',
   lastName: 'Dawkins',
   address: 'everywhere',
+  userOrders: [
+    {
+      id: '1',
+    },
+  ],
 });
 
 const resolvers = {
   Query: {
     user: () => {
-      return lookupUser()
+      return lookupUser();
     },
   },
 };

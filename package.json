@@ -1,8 +1,11 @@
 {
   "scripts": {
-    "start": "concurrently \"npm run start:service\" \"npm run start:gateway\"",
+    "start": "concurrently \"npm run start:service\" \"npm run start:service2\"  \"npm run start:gateway\" ",
+    "start:apollo": "concurrently \"npm run start:service\" \"npm run start:service2\"  \"npm run start:apollo-gateway\" ",
     "start:gateway": "cd gateway && npm start",
-    "start:service": "cd service && npm start"
+    "start:apollo-gateway": "cd apollo-gateway && npm start",
+    "start:service": "cd service && npm start",
+    "start:service2": "cd service2 && npm start"
   },
   "dependencies": {
     "concurrently": "^8.2.2"
