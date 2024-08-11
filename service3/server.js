@@ -5,32 +5,32 @@ const typeDefs = gql`
     extend schema
     @link(
         url: "https://specs.apollo.dev/federation/v2.5"
-        import: ["@key"]
+        import: ["@key", "@requires", "@external"]
     )
+
+    type UserOrder @key(fields: "id") {
+        id: ID!
+    }
 
     type User @key(fields: "id") {
         id: ID!
-        firstName: String!
-        lastName: String!
-        address: String
-    }
-
-    type Query {
-        user: User
+        lastName: String! @external
+        userOrders: [UserOrder!] @requires(fields: "lastName")
     }
 `;
 
-const lookupUser = () => ({
-  id: 1,
-  firstName: 'Jake',
-  lastName: 'Dawkins',
-  address: 'everywhere'
-});
-
 const resolvers = {
-  Query: {
-    user: () => {
-      return lookupUser();
+  User: {
+    userOrders({ lastName }) {
+      console.log({ lastName });
+
+      if (lastName) {
+        return [
+          {
+            id: `${lastName}1`,
+          },
+        ];
+      }
     },
   },
 };
@@ -44,6 +44,6 @@ const server = new ApolloServer({
   ]),
 });
 
-server.listen(4001).then(({ url }) => {
+server.listen(4003).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });

@@ -8,6 +8,7 @@ const { getStitchedSchemaFromSupergraphSdl } = require('@graphql-tools/federatio
 const serviceList = [
   { name: 'Users', url: 'http://localhost:4001' },
   { name: 'Products', url: 'http://localhost:4002' },
+  { name: 'UserOrders', url: 'http://localhost:4003' },
 ];
 
 (async () => {
