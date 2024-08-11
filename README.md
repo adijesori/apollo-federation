@@ -28,7 +28,7 @@ Check the logs and you'll see:
 [1] { userOrders: null }
 ```
 
-(Even though it should've printed with the `lastName` due to [this](https://github.com/adijesori/apollo-federation/blob/807d7e0634abb47d18d807143b1dfa869275fd7a/service2/server.js#L26) and [this](https://github.com/adijesori/apollo-federation/blob/807d7e0634abb47d18d807143b1dfa869275fd7a/service2/server.js#L18))
+(Even though it should've printed with the `lastName` due to [this](https://github.com/adijesori/apollo-federation/blob/1971c917a5847a59c24ccc9a5046ef55ece4791b/service3/server.js#L25) and [this](https://github.com/adijesori/apollo-federation/blob/1971c917a5847a59c24ccc9a5046ef55ece4791b/service3/server.js#L18))
 
 Start Federation using ApolloGateway:
 
