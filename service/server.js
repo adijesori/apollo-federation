@@ -10,29 +10,11 @@ const typeDefs = gql`
 
     type User @key(fields: "id") {
         id: ID!
-        firstName: String!
-        lastName: String!
-        address: String
-    }
-
-    type Query {
-        user: User
+        externalField: String!
     }
 `;
 
-const lookupUser = () => ({
-  id: 1,
-  firstName: 'Jake',
-  lastName: 'Dawkins',
-  address: 'everywhere'
-});
-
 const resolvers = {
-  Query: {
-    user: () => {
-      return lookupUser();
-    },
-  },
 };
 
 const server = new ApolloServer({

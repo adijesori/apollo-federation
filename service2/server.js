@@ -7,32 +7,28 @@ const typeDefs = gql`
       url: "https://specs.apollo.dev/federation/v2.5"
       import: ["@key", "@requires", "@external"]
     )
-
-  type UserOrder @key(fields: "id", resolvable: false) {
-    id: ID!
-  }
-
+  
   type User @key(fields: "id") {
     id: ID!
-    userOrders: [UserOrder!] @external
-    totalOrdersPrices: Int @requires(fields: "userOrders { id }")
-    aggregatedOrdersByStatus: Int @requires(fields: "userOrders { id }")
+    externalField: String! @external
+    requiresField: SomeRequiredType @requires(fields: "externalField")
+  }
+  
+  type SomeRequiredType {
+      id: String
+  }
+  
+  type SomeTypeWithDisappearingField {
+    otherField: String
+    disappearingField: SomeRequiredType
+  }
+  
+  type Query {
+    someResolver: SomeTypeWithDisappearingField
   }
 `;
 
 const resolvers = {
-  User: {
-    totalOrdersPrices({ userOrders }) {
-      console.log({ userOrders });
-
-      return 0;
-    },
-    aggregatedOrdersByStatus({ userOrders }) {
-      console.log({ userOrders });
-
-      return 1;
-    },
-  },
 };
 
 const server = new ApolloServer({

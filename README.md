@@ -6,29 +6,48 @@ Start Federation using @graphql-tools/federation:
 npm start
 ```
 
-Then visit `http://localhost:4000`
+Then, visit `http://localhost:4000`
 Service runs on `http://localhost:4001`
 Service2 runs on `http://localhost:4002`
-Service3 runs on `http://localhost:4003`
 
 Run the following GQL query:
 ```graphql
-    query User {
-        user {
-            aggregatedOrdersByStatus
-            totalOrdersPrices
+    query {
+        someResolver {
+            disappearingField {
+                id
+            }
         }
     }
 ```
 
-Check the logs and you'll see:
+If will fail with the following error even though the field `disappearingField` exists in the schema (here):
+```json
+{
+  "errors": [
+    {
+      "message": "Cannot query field \"disappearingField\" on type \"SomeTypeWithDisappearingField\".",
+      "extensions": {
+        "code": "GRAPHQL_VALIDATION_FAILED",
+        "exception": {
+          "stacktrace": [
+            "GraphQLError: Cannot query field \"disappearingField\" on type \"SomeTypeWithDisappearingField\".",
+            "    at Object.Field (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/validation/rules/FieldsOnCorrectTypeRule.js:51:13)",
+            "    at Object.enter (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/language/visitor.js:301:32)",
+            "    at Object.enter (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/utilities/TypeInfo.js:391:27)",
+            "    at visit (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/language/visitor.js:197:21)",
+            "    at validate (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/validation/validate.js:91:24)",
+            "    at validate (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/requestPipeline.js:188:39)",
+            "    at processGraphQLRequest (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/requestPipeline.js:99:38)",
+            "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+            "    at async processHTTPRequest (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/runHttpQuery.js:222:30)"
+          ]
+        }
+      }
+    }
+  ]
+}
 ```
-[2] { lastName: undefined }
-[1] { userOrders: null }
-[1] { userOrders: null }
-```
-
-(Even though it should've printed with the `lastName` due to [this](https://github.com/adijesori/apollo-federation/blob/1971c917a5847a59c24ccc9a5046ef55ece4791b/service3/server.js#L25) and [this](https://github.com/adijesori/apollo-federation/blob/1971c917a5847a59c24ccc9a5046ef55ece4791b/service3/server.js#L18))
 
 Start Federation using ApolloGateway:
 
@@ -36,9 +55,11 @@ Start Federation using ApolloGateway:
 npm run start:apollo
 ```
 
-Check the logs and you'll see:
+Run the same query above. It will work and return the following:
+```json
+{
+  "data": {
+    "someResolver": null
+  }
+}
 ```
-[2] { lastName: 'Dawkins' }
-[1] { userOrders: [ { id: 'Dawkins1' } ] }
-[1] { userOrders: [ { id: 'Dawkins1' } ] }
-``` 
