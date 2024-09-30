@@ -21,7 +21,7 @@ Run the following GQL query:
     }
 ```
 
-If will fail with the following error even though the field `disappearingField` exists in the schema ([here](https://github.com/adijesori/apollo-federation/blob/86939bbb0515cc4aa5c571270f92a4086bd2d7ed/service2/server.js#L23)):
+If will fail with the following error even though the field `disappearingField` exists in the schema ([here](https://github.com/adijesori/apollo-federation/blob/8841d96b71c818c6c3a986d1c4761d005f8cc2e9/service2/server.js#L23)):
 ```json
 {
   "errors": [
