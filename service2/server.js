@@ -20,7 +20,7 @@ const typeDefs = gql`
   
   type SomeTypeWithDisappearingField {
     otherField: String
-    disappearingField: SomeRequiredType
+    disappearingField: [SomeRequiredType]
   }
   
   type Query {
