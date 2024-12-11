@@ -1,25 +1,53 @@
+require('dotenv').config();
+
 const { ApolloServer } = require('apollo-server');
-const {
-  IntrospectAndCompose,
-  RemoteGraphQLDataSource,
-} = require('@apollo/gateway');
-const { getStitchedSchemaFromSupergraphSdl } = require('@graphql-tools/federation');
 
-const serviceList = [
-  { name: 'Users', url: 'http://localhost:4001' },
-  { name: 'Products', url: 'http://localhost:4002' },
-];
-
+const { SupergraphSchemaManager } = require('@graphql-tools/federation');
+const { execute } = require('graphql');
 (async () => {
-  const { supergraphSdl } = await new IntrospectAndCompose({
-    subgraphs: serviceList,
-  }).initialize({ getDataSource: s => new RemoteGraphQLDataSource(s) });
+  class ManagedFederationStitchedGateway {
+    constructor() {
+      this.manager = new SupergraphSchemaManager();
+    }
 
-  const schema = getStitchedSchemaFromSupergraphSdl({
-    supergraphSdl,
-  });
+    onSchemaLoadOrUpdate(updateSchema) {
+      this.manager.addEventListener('schema', (schema, sdl) => {
+        updateSchema({
+          coreSupergraphSdl: sdl,
+          apiSchema: schema,
+        });
+      });
+      this.manager.addEventListener('log', ({ source, level, message }) => {
+        console[level](`[Managed Federation] ${source} | ${message}`);
+      });
+      this.manager.addEventListener('failure', err => {
+        console.error('[Managed Federation]', 'Schema loading failure:', err);
+      });
+    }
+
+    load() {
+      this.manager.start();
+
+      return {
+        executor(ctx) {
+          return execute({
+            schema: ctx.schema,
+            document: ctx.document,
+            operationName: ctx.operationName,
+            variableValues: ctx.request.variables,
+            contextValue: ctx.context,
+          });
+        },
+      };
+    }
+
+    stop() {
+      this.manager.stop();
+    }
+  }
+
   const server = new ApolloServer({
-    schema,
+    gateway: new ManagedFederationStitchedGateway(),
   });
 
   server.listen(4000).then(({ url }) => {

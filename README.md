@@ -1,52 +1,31 @@
 # Apollo Federation Example
 
+Create `gateway/.env` and `apollo-gateway/.env` files with the following content:
+
+```
+APOLLO_KEY=YourApolloKey
+APOLLO_GRAPH_REF=YourApolloGraphRef
+```
+
 Start Federation using @graphql-tools/federation:
 
 ```bash
 npm start
 ```
 
-Then, visit `http://localhost:4000`
-Service runs on `http://localhost:4001`
-Service2 runs on `http://localhost:4002`
-
-Run the following GQL query:
-```graphql
-    query {
-        someResolver {
-            disappearingField {
-                id
-            }
-        }
-    }
+If will fail with the following error:
 ```
-
-If will fail with the following error even though the field `disappearingField` exists in the schema ([here](https://github.com/adijesori/apollo-federation/blob/8841d96b71c818c6c3a986d1c4761d005f8cc2e9/service2/server.js#L23)):
-```json
-{
-  "errors": [
-    {
-      "message": "Cannot query field \"disappearingField\" on type \"SomeTypeWithDisappearingField\".",
-      "extensions": {
-        "code": "GRAPHQL_VALIDATION_FAILED",
-        "exception": {
-          "stacktrace": [
-            "GraphQLError: Cannot query field \"disappearingField\" on type \"SomeTypeWithDisappearingField\".",
-            "    at Object.Field (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/validation/rules/FieldsOnCorrectTypeRule.js:51:13)",
-            "    at Object.enter (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/language/visitor.js:301:32)",
-            "    at Object.enter (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/utilities/TypeInfo.js:391:27)",
-            "    at visit (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/language/visitor.js:197:21)",
-            "    at validate (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/validation/validate.js:91:24)",
-            "    at validate (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/requestPipeline.js:188:39)",
-            "    at processGraphQLRequest (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/requestPipeline.js:99:38)",
-            "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
-            "    at async processHTTPRequest (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/runHttpQuery.js:222:30)"
-          ]
-        }
-      }
-    }
-  ]
-}
+Error: Expected undefined to be a GraphQL schema.
+    at assertSchema (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/type/schema.js:37:11)
+    at validateSchema (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/type/validate.js:34:28)
+    at assertValidSchema (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/type/validate.js:56:18)
+    at assertValidExecutionArguments (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/execution/execute.js:194:35)
+    at execute (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/graphql/execution/execute.js:113:3)
+    at generateSchemaHash (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/utils/schemaHash.js:15:44)
+    at ApolloServer.generateSchemaDerivedData (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/ApolloServer.js:382:64)
+    at SchemaManager.schemaDerivedDataProvider (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/ApolloServer.js:156:65)
+    at SchemaManager.processSchemaLoadOrUpdateEvent (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/utils/schemaManager.js:100:103)
+    at SchemaManager.start (/Users/ori/WebstormProjects/apollo-federation/gateway/node_modules/apollo-server-core/dist/utils/schemaManager.js:46:22)
 ```
 
 Start Federation using ApolloGateway:
@@ -55,11 +34,4 @@ Start Federation using ApolloGateway:
 npm run start:apollo
 ```
 
-Run the same query above. It will work and return the following:
-```json
-{
-  "data": {
-    "someResolver": null
-  }
-}
-```
+It will work as expected.
