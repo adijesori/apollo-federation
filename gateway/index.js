@@ -27,18 +27,22 @@ const { execute } = require('graphql');
 
     load() {
       this.manager.start();
-
-      return {
-        executor(ctx) {
-          return execute({
-            schema: ctx.schema,
-            document: ctx.document,
-            operationName: ctx.operationName,
-            variableValues: ctx.request.variables,
-            contextValue: ctx.context,
-          });
-        },
-      };
+      return new Promise(resolve => {
+       // We wait for the first schema here
+       this.managet.addEventListener('schema', () => {
+         resolve({
+          executor(ctx) {
+            return execute({
+              schema: ctx.schema,
+              document: ctx.document,
+              operationName: ctx.operationName,
+              variableValues: ctx.request.variables,
+              contextValue: ctx.context,
+            });
+          },
+        })
+       }, { once: true })
+      });
     }
 
     stop() {
