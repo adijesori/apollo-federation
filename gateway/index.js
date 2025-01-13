@@ -7,18 +7,18 @@ const { execute } = require('graphql');
 (async () => {
   class ManagedFederationStitchedGateway {
     constructor() {
-      this.manager = new SupergraphSchemaManager();
+      this.manager = new SupergraphSchemaManager({});
     }
 
     onSchemaLoadOrUpdate(updateSchema) {
-      this.manager.addEventListener('schema', (schema, sdl) => {
+      this.manager.addEventListener('schema', ({ detail: { schema, supergraphSdl } }) => {
         updateSchema({
-          coreSupergraphSdl: sdl,
+          coreSupergraphSdl: supergraphSdl,
           apiSchema: schema,
         });
       });
-      this.manager.addEventListener('log', ({ source, level, message }) => {
-        console[level](`[Managed Federation] ${source} | ${message}`);
+      this.manager.addEventListener('log', ({ detail: { source, level, message } }) => {
+        console[level](`[Managed Federation] ${level} ${source} | ${message}`);
       });
       this.manager.addEventListener('failure', err => {
         console.error('[Managed Federation]', 'Schema loading failure:', err);
@@ -28,20 +28,20 @@ const { execute } = require('graphql');
     load() {
       this.manager.start();
       return new Promise(resolve => {
-       // We wait for the first schema here
-       this.managet.addEventListener('schema', () => {
-         resolve({
-          executor(ctx) {
-            return execute({
-              schema: ctx.schema,
-              document: ctx.document,
-              operationName: ctx.operationName,
-              variableValues: ctx.request.variables,
-              contextValue: ctx.context,
-            });
-          },
-        })
-       }, { once: true })
+        // We wait for the first schema here
+        this.manager.addEventListener('schema', () => {
+          resolve({
+            executor(ctx) {
+              return execute({
+                schema: ctx.schema,
+                document: ctx.document,
+                operationName: ctx.operationName,
+                variableValues: ctx.request.variables,
+                contextValue: ctx.context,
+              });
+            },
+          })
+        }, { once: true })
       });
     }
 
