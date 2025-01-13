@@ -1,20 +1,39 @@
 require('dotenv').config();
 
 const { ApolloServer } = require('apollo-server');
-
+const { applyMiddleware } = require('graphql-middleware');
 const { SupergraphSchemaManager } = require('@graphql-tools/federation');
 const { execute } = require('graphql');
+const {
+  typeDefs: gatewayCustomTypedefs,
+  resolvers: gatewayCustomResolvers,
+} = require('./link/gateway-to-user');
+
+async function loggingMiddleware(resolve, root, args, context, info) {
+  console.log('Arguments:', args);
+  const result = await resolve(root, args, context, info);
+  console.log('Result:', result);
+  return result;
+}
+
 (async () => {
   class ManagedFederationStitchedGateway {
     constructor() {
-      this.manager = new SupergraphSchemaManager({});
+      this.manager = new SupergraphSchemaManager({
+        onStitchingOptions(opts) {
+          opts.typeDefs = gatewayCustomTypedefs;
+          opts.resolvers = gatewayCustomResolvers;
+        },
+      });
     }
 
     onSchemaLoadOrUpdate(updateSchema) {
       this.manager.addEventListener('schema', ({ detail: { schema, supergraphSdl } }) => {
         updateSchema({
           coreSupergraphSdl: supergraphSdl,
-          apiSchema: schema,
+          apiSchema: applyMiddleware(schema, {
+            Query: loggingMiddleware,
+          }),
         });
       });
       this.manager.addEventListener('log', ({ detail: { source, level, message } }) => {

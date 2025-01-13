@@ -5,7 +5,8 @@
     "@graphql-tools/federation": "^3.0.3",
     "apollo-server": "^3.13.0",
     "dotenv": "^16.4.7",
-    "graphql": "^16.9.0"
+    "graphql": "^16.9.0",
+    "graphql-middleware": "^6.1.35"
   },
   "main": "index.js",
   "scripts": {
