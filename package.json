@@ -1,4 +1,10 @@
 {
+  "workspaces": [
+    "service",
+    "gateway",
+    "apollo-gateway"
+  ],
+  "private": true,
   "scripts": {
     "start": "concurrently \"npm run start:service\" \"npm run start:gateway\"",
     "start:apollo": "npm run start:apollo-gateway",
