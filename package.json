@@ -2,17 +2,22 @@
   "workspaces": [
     "service",
     "gateway",
-    "apollo-gateway"
+    "apollo-gateway",
+    "hive-gateway"
   ],
   "private": true,
   "scripts": {
-    "start": "concurrently \"npm run start:service\" \"npm run start:gateway\"",
+    "start": "concurrently \"npm run start:service\" \"npm run start:hive-gateway\"",
     "start:apollo": "npm run start:apollo-gateway",
     "start:gateway": "cd gateway && npm start",
     "start:apollo-gateway": "cd apollo-gateway && npm start",
+    "start:hive-gateway": "cd hive-gateway && npm start",
     "start:service": "cd service && npm start"
   },
   "dependencies": {
     "concurrently": "^8.2.2"
+  },
+  "resolutions": {
+    "@graphql-yoga/plugin-apollo-usage-report": "0.5.7-alpha-20250114104343-cf3fb3860993f8ac48b0eff0bfc0e1fbc168324d"
   }
 }

@@ -16,18 +16,24 @@ async function loggingMiddleware(resolve, root, args, context, info) {
 }
 
 (async () => {
+  const manager = new SupergraphSchemaManager({
+    onStitchingOptions(opts) {
+      opts.typeDefs = gatewayCustomTypedefs;
+      opts.resolvers = gatewayCustomResolvers;
+    },
+    onStitchedSchema(schema) {
+      return applyMiddleware(schema, {
+        Query: loggingMiddleware,
+      });
+    },
+  });
+  
   const server = new ApolloServer({
-    gateway: new SupergraphSchemaManager({
-      onStitchingOptions(opts) {
-        opts.typeDefs = gatewayCustomTypedefs;
-        opts.resolvers = gatewayCustomResolvers;
-      },
-      onStitchedSchema(schema) {
-        return applyMiddleware(schema, {
-          Query: loggingMiddleware,
-        });
-      },
-    }),
+    gateway: manager,
+  });
+
+  manager.addEventListener("log", (event) => {
+    console[event.detail.level](event.detail.message);
   });
 
   server.listen(4000).then(({ url }) => {
