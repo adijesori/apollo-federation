@@ -1,15 +1,20 @@
-import { defineConfig, GatewayPlugin } from "@graphql-hive/gateway";
-import { useGraphQLMiddleware } from "@envelop/graphql-middleware";
+import {defineConfig, GatewayPlugin} from "@graphql-hive/gateway";
+import {useGraphQLMiddleware} from "@envelop/graphql-middleware";
+import {
+    typeDefs as gatewayCustomTypedefs, resolvers as gatewayCustomResolvers
+} from "./link/gateway-to-user";
+
+const GRAPHQL_PATH = "/";
 
 const ApolloSandboxPlugin: GatewayPlugin = {
-  onRequest({ fetchAPI, request, url, endResponse }) {
-    if (
-      request.headers.get("accept")?.includes("text/html") &&
-      url.pathname === "/graphql"
-    ) {
-      return endResponse(
-        new fetchAPI.Response(
-          `
+    onRequest({fetchAPI, request, url, endResponse}) {
+        if (
+            request.headers.get("accept")?.includes("text/html") &&
+            url.pathname === GRAPHQL_PATH
+        ) {
+            return endResponse(
+                new fetchAPI.Response(
+                    `
                     <div style="width: 100%; height: 100%;" id='embedded-sandbox'></div>
                     <script src="https://embeddable-sandbox.cdn.apollographql.com/_latest/embeddable-sandbox.umd.production.min.js"></script> 
                     <script>
@@ -19,28 +24,32 @@ const ApolloSandboxPlugin: GatewayPlugin = {
                         });
                     </script>
             `,
-          {
-            headers: {
-              "content-type": "text/html",
-            },
-          }
-        )
-      );
-    }
-  },
+                    {
+                        headers: {
+                            "content-type": "text/html",
+                        },
+                    }
+                )
+            );
+        }
+    },
 };
 
 export const gatewayConfig = defineConfig({
-  plugins: () => [
-    useGraphQLMiddleware([loggingMiddleware]),
-    ApolloSandboxPlugin,
-  ],
-  graphiql: false,
+    additionalResolvers: gatewayCustomResolvers,
+    additionalTypeDefs: gatewayCustomTypedefs,
+    plugins: () => [
+        useGraphQLMiddleware([loggingMiddleware]),
+        ApolloSandboxPlugin,
+    ],
+    landingPage: false,
+    graphqlEndpoint: GRAPHQL_PATH,
+    graphiql: false,
 });
 
 async function loggingMiddleware(resolve, root, args, context, info) {
-  console.log("Arguments:", args);
-  const result = await resolve(root, args, context, info);
-  console.log("Result:", result);
-  return result;
+    console.log("Arguments:", args);
+    const result = await resolve(root, args, context, info);
+    console.log("Result:", result);
+    return result;
 }
