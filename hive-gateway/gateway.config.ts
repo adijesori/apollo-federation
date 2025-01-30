@@ -13,23 +13,25 @@ const ApolloSandboxPlugin: GatewayPlugin = {
             url.pathname === GRAPHQL_PATH
         ) {
             return endResponse(
-                new fetchAPI.Response(
-                    `
-                    <div style="width: 100%; height: 100%;" id='embedded-sandbox'></div>
-                    <script src="https://embeddable-sandbox.cdn.apollographql.com/_latest/embeddable-sandbox.umd.production.min.js"></script> 
-                    <script>
-                        new window.EmbeddedSandbox({
-                            target: '#embedded-sandbox',
-                            initialEndpoint: new URL(location.pathname, location.href).toString(),
-                        });
-                    </script>
-            `,
-                    {
-                        headers: {
-                            "content-type": "text/html",
-                        },
-                    }
-                )
+              new fetchAPI.Response(
+                `<html>
+                    <body style="margin: 0; padding: 0;">
+                        <div id="embedded-sandbox"></div>
+                        <script src="https://embeddable-sandbox.cdn.apollographql.com/_latest/embeddable-sandbox.umd.production.min.js"></script> 
+                        <script>
+                            new window.EmbeddedSandbox({
+                                target: '#embedded-sandbox',
+                                initialEndpoint: new URL(location.pathname, location.href).toString(),
+                            });
+                        </script>
+                    </body>
+                </html>`,
+                {
+                  headers: {
+                    "content-type": "text/html",
+                  },
+                }
+              )
             );
         }
     },

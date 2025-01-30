@@ -2,7 +2,7 @@
   "name": "hive-gateway",
   "version": "1.0.0",
   "dependencies": {
-    "@graphql-hive/gateway": "1.7.9-alpha-e37bd45224f808a23e36357e5b179b0a3e67ef46",
+    "@graphql-hive/gateway": "1.8.1",
     "@envelop/graphql-middleware": "^6.0.0",
     "graphql-middleware": "^6.1.35",
     "graphql": "16.10.0"
