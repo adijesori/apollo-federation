@@ -1471,23 +1471,23 @@
   dependencies:
     tslib "^2.8.1"
 
-"@graphql-yoga/plugin-apollo-inline-trace@^3.10.9":
-  version "3.10.9"
-  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-apollo-inline-trace/-/plugin-apollo-inline-trace-3.10.9.tgz#1aa794089301b0c934045878c108f3e2eb850d98"
-  integrity sha512-4DM0RL7RTrZaxSE/TvAmidcb2Hy06PgjqJxJOeu+KRH9kgOXOB9hVXGB+DMq3HA1nEKxxFWj+ziFlfNqIb629A==
+"@graphql-yoga/plugin-apollo-inline-trace@^3.10.12":
+  version "3.10.12"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-apollo-inline-trace/-/plugin-apollo-inline-trace-3.10.12.tgz#4c63095d69cc69641041ddeccfaf2c95e60c8edb"
+  integrity sha512-/j0u1GaigymvXCQGE+9L7ZN9UVKCoDB4dPxL/qGlwe4ver0MkA7hZ2HDWB0dcTgYdbdP0NMGIHQqeqoq4XBDdA==
   dependencies:
     "@apollo/usage-reporting-protobuf" "^4.1.1"
     "@envelop/on-resolve" "^4.1.1"
-    tslib "^2.5.2"
+    tslib "^2.8.1"
 
-"@graphql-yoga/plugin-apollo-usage-report@0.5.7-alpha-20250114104343-cf3fb3860993f8ac48b0eff0bfc0e1fbc168324d", "@graphql-yoga/plugin-apollo-usage-report@^0.5.9":
-  version "0.5.7-alpha-20250114104343-cf3fb3860993f8ac48b0eff0bfc0e1fbc168324d"
-  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-apollo-usage-report/-/plugin-apollo-usage-report-0.5.7-alpha-20250114104343-cf3fb3860993f8ac48b0eff0bfc0e1fbc168324d.tgz#317b81140647bcb585fe3060cae22d4e7df32f51"
-  integrity sha512-TZoh3/35ijTDvAdO4RkC/56yGsCjNCALgba26pAFz58na7F5dpvEFTIgteHd8vEglzjKVWFq0Xs/LTe978Loaw==
+"@graphql-yoga/plugin-apollo-usage-report@^0.5.9":
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/plugin-apollo-usage-report/-/plugin-apollo-usage-report-0.5.9.tgz#4ca0a1d257f5111954b8efcf6dad5d04497052fa"
+  integrity sha512-OzZDw1vefktXOaG8wyyDbF8Bq3Ka6vLSbw+fYEOBowD8PUugKmuGSYY4KXVRsp3QkasoHDIxzkBMGtY+RKclwA==
   dependencies:
     "@apollo/usage-reporting-protobuf" "^4.1.1"
-    "@graphql-yoga/plugin-apollo-inline-trace" "^3.10.9"
-    tslib "^2.5.2"
+    "@graphql-yoga/plugin-apollo-inline-trace" "^3.10.12"
+    tslib "^2.8.1"
 
 "@graphql-yoga/plugin-csrf-prevention@^3.10.6":
   version "3.10.9"
